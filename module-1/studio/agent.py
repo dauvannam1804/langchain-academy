@@ -1,9 +1,12 @@
 from langchain_core.messages import SystemMessage
-from langchain_openai import ChatOpenAI
 
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
+import requests
+from langchain_ollama import ChatOllama
+from langchain_core.tools import tool
 
+@tool
 def add(a: int, b: int) -> int:
     """Adds a and b.
 
@@ -13,6 +16,7 @@ def add(a: int, b: int) -> int:
     """
     return a + b
 
+@tool
 def multiply(a: int, b: int) -> int:
     """Multiplies a and b.
 
@@ -22,6 +26,7 @@ def multiply(a: int, b: int) -> int:
     """
     return a * b
 
+@tool
 def divide(a: int, b: int) -> float:
     """Divide a and b.
 
@@ -34,7 +39,10 @@ def divide(a: int, b: int) -> float:
 tools = [add, multiply, divide]
 
 # Define LLM with bound tools
-llm = ChatOpenAI(model="gpt-4o")
+# llm = ChatOpenAI(model="gpt-4o")
+# llm_with_tools = llm.bind_tools(tools)
+
+llm = ChatOllama(model="llama3.2:3b")
 llm_with_tools = llm.bind_tools(tools)
 
 # System message
